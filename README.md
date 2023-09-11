@@ -1,2 +1,2 @@
 # Toy
-A static web server.
+>A static web server.
