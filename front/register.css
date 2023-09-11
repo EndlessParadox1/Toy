@@ -1,0 +1,27 @@
+body{
+    font-family: 微软雅黑, sans-serif;
+    text-align: center;
+}
+.button{
+    margin: 20px;
+    padding: 5px;
+    font-size: 18px;
+    color: white;
+    background-color: skyblue;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.button:hover{ background-color: deepskyblue; }
+
+label, input{ font-size: 16px; }
+
+textarea{
+    font-family: 华文楷体, sans-serif;
+    font-size: 16px;
+}
+#portrait{
+    color: red;
+    cursor: pointer;
+}

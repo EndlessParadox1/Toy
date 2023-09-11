@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang='zh'>
+<head>
+    <meta charset='UTF-8'>
+    <link rel='stylesheet' href='register.css'>
+    <script src=https://code.jquery.com/jquery-3.7.0.min.js'></script>
+    <title>Register</title>
+</head>
+<body>
+<fieldset>
+    <legend>注册</legend>
+    <label>用户名:
+        <br><input type='text' id='username'>
+    </label><br>
+    <label>密码:
+        <br><input type='password' id='password'>
+    </label><br>
+    <label>邮箱:
+        <br><input type='email' id='email'>
+    </label><br>
+    <button id='registerBtn' class='button' onclick='judge()'>Register</button>
+    <input type='reset' class='button' value='Reset'>
+</fieldset>
+<hr>
+<p id='message'></p>
+<script>
+    function judge() {
+        let ques = confirm('确定提交吗?');
+        if (ques === true) {
+            let username = $('#username').val();
+            let password = $('#password').val();
+            let email = $('#email').val();
+            let message = $('#message');
+            if(!username || !password || !email)
+                alert('存在字段为空!');
+            else
+                fetch('/api/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        'username': username,
+                        'password': password,
+                        'email': email
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if(!data.code){
+                            message.css('color', 'red').text('注册失败: ' + data.msg);
+                            setTimeout(() => message.html('').css('color', 'black'), 3000);
+                        }else{
+                            message.text('注册成功! 您的用户ID为: ' + data.data.id
+                                + '. 稍后将自动跳转到登录界面...');
+                            setTimeout(() => location.href = 'login.html', 5000);
+                        }
+                    })
+                    .catch((e) => {
+                        console.error('Error:', e);
+                    });
+        }
+    }
+</script>
+</body>
+</html>

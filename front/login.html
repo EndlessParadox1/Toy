@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang='zh'>
+<head>
+    <meta charset='UTF-8'>
+    <title>Fuck!</title>
+    <link rel='stylesheet' href='login.css'>
+</head>
+<body>
+    <fieldset>
+        <legend>登陆</legend>
+        <br>
+        <label>登录方式:
+            <select id='loginType'>
+            <option value='email'>邮箱</option>
+            <option value='ID'>ID</option>
+            </select>
+        </label><br>
+        <label for='identifier'>邮箱/ID:</label>
+            <br><input type='text' id='identifier' name='identifier'><br>
+        <label>密码:
+            <br><input type='password' id='password' name='password'>
+        </label><br>
+        <button id='loginBtn' class='button'>Login</button><br>
+    </fieldset>
+    <p>
+        还没有账号?
+        <a href='register.html' class='link'>注册一个!</a>
+    </p>
+    <hr>
+    <p id='message'></p>
+</body>
+</html>
