@@ -23,7 +23,10 @@ async fn main() {
 async fn handle_connection(mut stream: TcpStream) {
     let mut buffer = [0; 1024];
     stream.read(&mut buffer).await.unwrap();
-    let request = str::from_utf8(&buffer).unwrap();
+    let request = match str::from_utf8(&buffer) {
+        Ok(tmp) => tmp,
+        Err(_) => return,
+    };
     let re = Regex::new(r"GET\s(?P<src>.*)\sHTTP/1.1").unwrap();
     let cap = match re.captures(request) {
         Some(tmp) => tmp,
