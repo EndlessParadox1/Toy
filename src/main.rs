@@ -1,28 +1,33 @@
-use async_std::{
+use chrono::{Local, SubsecRound};
+use regex::Regex;
+use std::{fs, str, sync::Arc};
+use tokio::{
+    io::{AsyncReadExt, AsyncWriteExt},
     net::{TcpListener, TcpStream},
-    prelude::*,
+    sync::Semaphore,
     task,
 };
-use chrono::{Local, SubsecRound};
-use futures::stream::StreamExt;
-use regex::Regex;
-use std::{fs, str};
 
-#[async_std::main]
+#[tokio::main]
 async fn main() {
+    let s = Arc::new(Semaphore::new(16));
     let listener = TcpListener::bind("127.0.0.1:7878").await.unwrap();
-    listener
-        .incoming()
-        .for_each_concurrent(None, |stream| async move {
-            let stream = stream.unwrap();
-            task::spawn(handle_connection(stream));
-        })
-        .await;
+    loop {
+        let (stream, _) = listener.accept().await.unwrap();
+        let permit = s.clone().acquire_owned().await.unwrap();
+        task::spawn(async move {
+            handle_connection(stream).await;
+            drop(permit);
+        });
+    }
 }
 
 async fn handle_connection(mut stream: TcpStream) {
     let mut buffer = [0; 1024];
-    stream.read(&mut buffer).await.unwrap();
+    match stream.read(&mut buffer).await {
+        Ok(_) => (),
+        Err(_) => return,
+    };
     let request = match str::from_utf8(&buffer) {
         Ok(tmp) => tmp,
         Err(_) => return,
